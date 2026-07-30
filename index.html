@@ -41,6 +41,11 @@
   nav.site-nav a{text-decoration:none;transition:color .2s ease;}
   nav.site-nav a:hover, nav.site-nav a:focus-visible{color:var(--paper);}
   nav.site-nav a:focus-visible{outline:2px solid var(--verified);outline-offset:4px;border-radius:2px;}
+  .nav-toggle{
+    display:none;background:none;border:1px solid var(--line);border-radius:8px;
+    width:38px;height:38px;align-items:center;justify-content:center;color:var(--paper);cursor:pointer;
+  }
+  .nav-toggle svg{width:18px;height:18px;}
 
   main{position:relative;z-index:1;}
 
@@ -162,15 +167,37 @@
   footer{padding:2.2rem 6vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--slate);}
 
   @media (max-width:860px){
-    .hero{grid-template-columns:1fr;gap:1.6rem;padding-top:6vh;}
+    header.site{padding:16px 5vw;}
+    .hero{grid-template-columns:1fr;gap:1.6rem;padding:6vh 5vw 6vh;}
     .avatar{width:80px;height:80px;font-size:1.4rem;}
-    .about-grid{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr;gap:2rem;}
+    section{padding:5vh 5vw;}
     .ledger{grid-template-columns:repeat(2,1fr);}
-    .ledger-item{border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
+    .ledger-item{padding:1.4rem 1rem;border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
     .ledger-item:nth-child(2n){border-right:none;}
     .ledger-item:nth-last-child(-n+2){border-bottom:none;}
+    .ledger-num{font-size:1.6rem;}
     .skill-row{grid-template-columns:1fr;gap:0.5rem;}
-    nav.site-nav{display:none;}
+    .cta-row .btn{flex:1 1 auto;justify-content:center;}
+
+    nav.site-nav{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;gap:0;background:var(--panel);
+      border-bottom:1px solid var(--line);box-shadow:0 12px 24px rgba(0,0,0,0.35);
+    }
+    nav.site-nav.open{display:flex;}
+    nav.site-nav a{padding:0.95rem 5vw;border-top:1px solid var(--line);color:var(--paper);}
+    nav.site-nav a:first-child{border-top:none;}
+    .nav-toggle{display:flex;}
+  }
+  @media (max-width:480px){
+    .ledger{grid-template-columns:1fr;}
+    .ledger-item{border-right:none !important;}
+    .ledger-item:not(:last-child){border-bottom:1px solid var(--line) !important;}
+    .ledger-item:last-child{border-bottom:none !important;}
+    .tl-head-row{flex-direction:column;align-items:flex-start;gap:0.2rem;}
+    .contact-fields{flex-direction:column;align-self:stretch;}
+    .contact-pill{justify-content:center;}
   }
   @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
 
@@ -187,7 +214,10 @@
 
 <header class="site">
   <div class="wordmark"><span class="dot"></span>E. ENISAN</div>
-  <nav class="site-nav">
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
+  </button>
+  <nav class="site-nav" id="siteNav">
     <a href="#about">About</a>
     <a href="#record">Track Record</a>
     <a href="#experience">Experience</a>
@@ -420,6 +450,23 @@
   <span>© 2026 Emmanuel Enisan</span>
   <span>Lagos, Nigeria — Open to remote</span>
 </footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const siteNav = document.getElementById('siteNav');
+  if (navToggle && siteNav) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = siteNav.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    siteNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        siteNav.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+</script>
 
 </body>
 </html>
